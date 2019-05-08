@@ -1,8 +1,8 @@
 package me.seungwoo;
 
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,7 +41,7 @@ public class ExcelController {
         return "personXls";
     }
 
-    @GetMapping("/excelDown")
+    @GetMapping("/excel/download")
     public void excelDown(HttpServletResponse response) throws Exception {
         // DB조회
         List<Person> list = Arrays.asList(
@@ -49,7 +49,8 @@ public class ExcelController {
                 new Person("사람2", 20, "test@test.com"),
                 new Person("사람3", 30, "test@test.com")
         );
-        Workbook wb = new HSSFWorkbook();
+        //Workbook wb = new HSSFWorkbook(); //xls
+        Workbook wb = new XSSFWorkbook();   //xlsx
         Sheet sheet = wb.createSheet("테스트");
         Row row;
         Cell cell;
@@ -100,7 +101,7 @@ public class ExcelController {
         }
 
         response.setContentType("ms-vnd/excel");
-        response.setHeader("Content-Disposition", "attachment;filename=person.xls");
+        response.setHeader("Content-Disposition", "attachment;filename=person.xlsx");
         wb.write(response.getOutputStream());
         wb.close();
     }
